@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConsoleTable;
@@ -6,28 +7,34 @@ using CSV.Parser;
 
 namespace CsvParserRun
 {
-    public class Car 
-    {
-        public string Year { get; set; }
-        public string Make { get; set; }
-        public string Model { get; set; }
-        public string Description { get; set; }
-        public string Price { get; set; }
-    }
     class Program
     {
         static void Main(string[] args)
         {
+            var csvProcessOptions = new Dictionary<string, ICSVParser>() {
+                { "1",  new DefaultCSVParser()},
+                { "2",  new QuotedCSVParser()},
+            };
+
             var fileExists = false;
             var validExtension = false;
             var path = string.Empty;
+            var selectedParser = string.Empty;
 
             while (!fileExists || !validExtension)
             {
+                PrintCSVParserOptionMessage();
+
+                selectedParser = Console.ReadLine();
+
+                if (!csvProcessOptions.ContainsKey(selectedParser))
+                    continue;
+
                 PrintReadMessage();
+
                 path = Console.ReadLine();
 
-                if (path == "exit")
+                if (path == "exit" || selectedParser == "exit")
                 {
                     Console.WriteLine("Exit....");
                     return;
@@ -39,13 +46,23 @@ namespace CsvParserRun
             }
 
             Console.WriteLine("Processing file");
+            try
+            {
+                var csvParser = new CsvParser(csvProcessOptions[selectedParser]);
+                var parsetData = csvParser.Parse(path);
 
-            var csvParser = new CsvParser(new DefaultCSVParser());
-            var parsetData = csvParser.Parse(path);
+                var consoleTable = new PrintTable(parsetData, csvParser.Headers);
 
-            var consoleTable = new PrintTable(parsetData, csvParser.Headers);
-
-            consoleTable.Print();
+                consoleTable.Print();
+            }
+            catch (CsvParserException e)
+            {
+                LogErrorMessage(e.Message);
+            }
+            catch (Exception) 
+            {
+                LogErrorMessage("Error!");
+            }
 
             Main(args);
         }
@@ -71,9 +88,13 @@ namespace CsvParserRun
             Console.ResetColor();
         }
 
+        private static void PrintCSVParserOptionMessage() 
+        {
+            Console.WriteLine("Type 1 for default csv not quoted comma separated \nType 2 for quoted csv comma separated");
+        }
+
         private static void PrintReadMessage()
         {
-            Console.WriteLine("This implementations suports the default no quoted csv -> a,b,12,v,ddddd ");
             Console.WriteLine("Type the file path or exit:");
         }
     }
