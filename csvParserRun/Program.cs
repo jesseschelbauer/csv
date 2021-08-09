@@ -43,9 +43,7 @@ namespace CsvParserRun
             var csvParser = new CsvParser(new DefaultCSVParser());
             var parsetData = csvParser.Parse(path);
 
-            var result = parsetData.Select(a => a);
-
-            var consoleTable = new PrintTable(result, csvParser.Headers);
+            var consoleTable = new PrintTable(parsetData, csvParser.Headers);
 
             consoleTable.Print();
 
