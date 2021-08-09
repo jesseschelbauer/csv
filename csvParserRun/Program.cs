@@ -39,11 +39,11 @@ namespace CsvParserRun
             }
 
             Console.WriteLine("Processing file");
-            
-            var csvParser = new CsvParser(new QuotedCSVParser());
-            var a = csvParser.Parse(path);
 
-            var result = a.Select(a => a).ToList();
+            var csvParser = new CsvParser(new DefaultCSVParser());
+            var parsetData = csvParser.Parse(path);
+
+            var result = parsetData.Select(a => a);
 
             var consoleTable = new PrintTable(result, csvParser.Headers);
 
@@ -75,7 +75,8 @@ namespace CsvParserRun
 
         private static void PrintReadMessage()
         {
-            Console.WriteLine("File path or exit:");
+            Console.WriteLine("This implementations suports the default no quoted csv -> a,b,12,v,ddddd ");
+            Console.WriteLine("Type the file path or exit:");
         }
     }
 }
