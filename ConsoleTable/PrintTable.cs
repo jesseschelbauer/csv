@@ -24,22 +24,22 @@ namespace ConsoleTable
         private string IntermediateLineTemplate { get; set; }
         private string CloseLineTemplate { get; set; }
         private string DataRowTemplate { get; }
-        private List<string[]> Data { get; }
+        private IEnumerable<string[]> Data { get; }
         private int[] ColsWidth { get; }
         private int TotalRows { get; }
 
-        public PrintTable(List<string[]> data, string[] headers, IPrintTableConfig iPrintTableConfig = null)
+        public PrintTable(IEnumerable<string[]> data, string[] headers, IPrintTableConfig iPrintTableConfig = null)
         {
             _iPrintTableConfig = iPrintTableConfig ?? new PrintTableDefaultConfig();
 
-            data.Insert(0, headers);
+            data.Prepend(headers);
 
             Data = data;
 
             var firstRow = data.First();
             ColsWidth = new int[firstRow.Length];
 
-            TotalRows = data.Count;
+            TotalRows = data.Count();
             SetColsWidth(data, firstRow);
 
             OpenLineTemplate = CreateOpenLineTemplate();
@@ -48,7 +48,7 @@ namespace ConsoleTable
             DataRowTemplate = CreatDataRowTemplate();
         }
 
-        private void SetColsWidth(List<string[]> data, string[] firstRow)
+        private void SetColsWidth(IEnumerable<string[]> data, string[] firstRow)
         {
             for (int i = 0; i < firstRow.Length; i++)
             {
@@ -60,10 +60,10 @@ namespace ConsoleTable
         {
             Console.WriteLine(OpenLineTemplate);
 
-            for (int i = 0; i < Data.Count; i++)
+            foreach (var item in Data.Select((Value, Index) => new { Value, Index }))
             {
-                Console.WriteLine(FillRowTemplate(Data[i]));
-                Console.WriteLine(CreateLine(i));
+                Console.WriteLine(FillRowTemplate(item.Value));
+                Console.WriteLine(CreateLine(item.Index));
             }
         }
 
