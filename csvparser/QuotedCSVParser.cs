@@ -9,6 +9,7 @@ namespace CSV.Parser
         public string ItemSeparator => ",";
         public string[] ParseLine(string line)
         {
+            // Regex is too slow
             MatchCollection matches = new Regex("((?<=\")[^\"]*(?=\"(,|$)+)|(?<=,|^)[^,\"]*(?=,|$))").Matches(line);
             return matches.Select(m => m.Value).ToArray();
         }
