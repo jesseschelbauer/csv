@@ -10,7 +10,7 @@ using System.IO;
 namespace ConsoleTable.Tests
 {
     /// <summary>
-    /// TODO This test is not ready.
+    /// TODO This test is not ready. finda a way to compare de genareted table
     /// </summary>
     [TestClass()]
     public class PrintTableTests
