@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet Build ${{ github.workspace }}/csvParser/CsvParser.csproj --no-restore --verbosity normal
     - name: Test
-      run: dotnet test ${{ github.workspace }}/csvparserTests/CsvParser.csproj --no-build --verbosity normal
+      run: dotnet test ${{ github.workspace }}/csvparserTests/CsvParserTests.csproj --no-build --verbosity normal
