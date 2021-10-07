@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore ${{ github.workspace }}/csvParserRun/CsvParserRun.csproj
+      run: dotnet restore ${{ github.workspace }}/csvParser/CsvParser.csproj
     - name: Build
-      run: dotnet test ${{ github.workspace }}/csvParserRun/CsvParserRun.csproj --no-restore --verbosity normal
-    #- name: Test
-      #run: dotnet test --no-build --verbosity normal
+      run: dotnet Build ${{ github.workspace }}/csvParser/CsvParser.csproj --no-restore --verbosity normal
+    - name: Test
+      run: dotnet test ${{ github.workspace }}/csvparserTests/CsvParser.csproj --no-build --verbosity normal
